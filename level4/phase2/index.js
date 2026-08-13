@@ -4,30 +4,29 @@ dotenv.config()
 import express, { text } from "express"
 import { ChatGroq } from "@langchain/groq";
 
+
 const app = express()
 const port = 5000
 
 app.use(express.json())
 
+
 const llm = new ChatGroq({
     model: "llama-3.3-70b-versatile",
-    temperature: 0,
+    temperature: 0.7,
     maxTokens: 100,
     maxRetries: 2
 })
+
 
 app.post("/ai", async (req, res) => {
 
     const { input } = req.body
 
-    const response = await llm.invoke([
-        {
-            role: "system",
-            content: ""
-        }
-    ])
+    const response = await llm.invoke(input)
 
-    return res.status(200).json({ Output: response.content })
+
+    return res.status(200).json({ ai: response.content })
 
 })
 
